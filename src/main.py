@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, Favorite #Aqui importar elementos
+from models import db, User, Favorite, Characters, Planets, Vehicles
 #from models import Person
 
 app = Flask(__name__)
@@ -32,30 +32,37 @@ def sitemap():
 
 @app.route('/user', methods=['GET'])
 def handle_hello():
-    #en la variable all_users estoy consultando a la base de datos por todos los registros de la tabla users
-
-    all_users = User.query.get(2)
-    #estoy almacenando dentro de una listalist()
-    # realizando un map(), donde un map ejecuta una instruccion por cada registro de un usuario en mi base de datos
-    #y lambda es lo mismo que una funcion ()=>{} que ejecuta por cada registro de la base de datos (X) y ejecutara su funcion serialize() para devolver los datos que quiero
-
+    all_users = User.query.all()    
     all_users = list(map(lambda x: x.serialize(), all_users))
-    #retorno todos los usuarios
     return jsonify(all_users), 200
-     
-#     response_body = {
-#         "msg": "Hello, this is your GET /user response "
-#     }
 
-#     return jsonify(response_body), 200
-
-# # this only runs if `$ python src/main.py` is executed
-# if __name__ == '__main__':
-#     PORT = int(os.environ.get('PORT', 3000))
-#     app.run(host='0.0.0.0', port=PORT, debug=False)
-
-@app.route('/favoritos', methods=['GET'])
+@app.route('/favorite', methods=['GET'])
 def allFavoritos():
-    resultado ={"Mensaje ": "Aca iran todos los favoritos"}
-    return jsonify(resultado)
+    all_favorites = Favorite.query.all()    
+    all_favorites = list(map(lambda x: x.serialize(), all_favorites))
+    return jsonify(all_favorites), 200
 
+@app.route('/characters', methods=['GET'])
+def allCharacters():
+    all_characters = Characters.query.all()    
+    all_characters = list(map(lambda x: x.serialize(), all_characters))
+    return jsonify(all_characters), 200
+
+@app.route('/planets', methods=['GET'])
+def allPlanets():
+    all_planets = Planets.query.all()    
+    all_planets = list(map(lambda x: x.serialize(), all_planets))
+    return jsonify(all_planets), 200
+
+@app.route('/vehicles', methods=['GET'])
+def allVehicles():
+    all_vehicles = Vehicles.query.all()    
+    all_vehicles = list(map(lambda x: x.serialize(), all_vehicles))
+    return jsonify(all_vehicles), 200
+
+
+
+# this only runs if `$ python src/main.py` is executed
+if __name__ == '__main__':
+    PORT = int(os.environ.get('PORT', 3000))
+    app.run(host='0.0.0.0', port=PORT, debug=False)
